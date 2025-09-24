@@ -28,6 +28,7 @@ public class EmployeeController {
         Employee employee = employeeService.getEmployeeById(id);
         if(employee!=null){
             return ResponseEntity.ok(employee);
+//            return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
@@ -45,11 +46,13 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee body){
         Employee employee = employeeService.getEmployeeById(id);
+        Employee updated = employeeService.updateEmployee(id, body);
         if(employee!=null){
-            return ResponseEntity.ok(employeeService.updateEmployee(id, body));
+            return ResponseEntity.ok(updated);
 
         }else {
             return ResponseEntity.notFound().build();
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 

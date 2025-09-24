@@ -150,12 +150,12 @@ class EmployeeApiIntegrationTest {
     }
 
 
-    @Autowired
+   /* @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Test
     void verifyPreloadedEmployees() {
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM employee", Integer.class);
         System.out.println("Employees in DB at startup: " + count);
-    }
+    }*/
 }

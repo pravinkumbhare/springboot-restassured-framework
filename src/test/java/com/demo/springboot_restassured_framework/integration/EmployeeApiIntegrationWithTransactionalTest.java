@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 // No need for manual cleanup of IDs (John Doe or others) anymore.
 
 @SpringBootTest
-//@Transactional  // Automatically rolls back DB changes after each test, So even if a test inserts, updates, or deletes, the DB resets automatically for the next test.
+@Transactional  // Automatically rolls back DB changes after each test, So even if a test inserts, updates, or deletes, the DB resets automatically for the next test.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)       //  reuse same test class instance across all test methods.
 public class EmployeeApiIntegrationWithTransactionalTest {
 
