@@ -1,6 +1,8 @@
 package com.demo.springboot_restassured_framework.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
 
 @Entity
 @Table(name = "employee")
@@ -12,7 +14,9 @@ public class Employee {
     @Column(name = "emp_id")
     private Long empId;
 
+
     @Column(name = "emp_name", nullable = false)
+    @NotBlank(message = "Name cannot be blank") // covers null, "", " "
     private String empName;
 
     @Column(name = "emp_designation")
