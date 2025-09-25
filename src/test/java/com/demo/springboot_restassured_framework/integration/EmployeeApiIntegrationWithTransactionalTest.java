@@ -118,4 +118,102 @@ public class EmployeeApiIntegrationWithTransactionalTest {
 
         assertThat(employeeById.getEmpName()).isEqualTo("Charlie");
     }
+
+//    Added more test cases for edge scenarios (like invalid updates/deletes).  (In real project it is for Test Coverage)
+
+    //  Try to fetch an employee that does not exist
+    @Test
+    void testGetNonExistingEmployeeById(){
+        Long invalidId = 11111L;
+
+        var nonExistingEmployee = employeeRepository.findById(invalidId);
+        assertThat(nonExistingEmployee).isEmpty();
+    }
+
+    //  Try to update a non-existing employee
+
+
+    @Test
+    void testUpdateNonExistingEmployeeById(){
+
+        Long inValidId = 2222L;
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+
+            Employee nonExistingEmployee = employeeRepository.findById(inValidId).orElseThrow();
+
+            nonExistingEmployee.setEmpDesignation("QA");
+            nonExistingEmployee.setEmpSalary(22L);
+        });
+
+
+    }
+
+//  Try to delete a non-existing employee
+    @Test
+    void testDeleteInvalidEmployee(){
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+
+            Employee anomyEmployee = employeeRepository.findAll().stream()
+                    .filter(e -> e.getEmpName().equalsIgnoreCase("Anonymous")).findFirst().orElseThrow();
+            employeeRepository.delete(anomyEmployee);
+        });
+
+//    [OR]
+
+        long invalidId = 999L;
+
+        // deleteById does not throw an error if ID doesn’t exist
+        employeeRepository.deleteById(invalidId);
+        assertThat(employeeRepository.findAll()).hasSize(3); // still only Alice, Bob, Charlie
+    }
+
+    // Insert employee with null fields (invalid data)
+    @Test
+    void testCreateEmployeeWithNullName() {
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+
+            Employee employee = new Employee();
+            employee.setEmpDesignation("BA");
+            employee.setEmpSalary(0L);
+            employee.setEmpName(null);   // In Entity we have defined =>  @Column(name = "emp_name", nullable = false)
+
+            employeeRepository.save(employee);
+        });
+    }
 }
+
+/*
+        ===========  Flow Diagram =================
+        ┌──────────────────────────────────────────┐
+        │          Spring Boot Test Context        │
+        └──────────────────────────────────────────┘
+                            │
+                            ▼
+        ┌──────────────────────────────────────────┐
+        │   Load schema.sql + data.sql (Alice,     │
+        │   Bob, Charlie into H2 in-memory DB)     │
+        └──────────────────────────────────────────┘
+                            │
+                            ▼
+        ┌──────────────────────────────────────────┐
+        │ Run a Test Method (e.g., testCreateEmp)  │
+        │   - Uses @Autowired EmployeeRepository   │
+        │   - Inserts/updates/deletes employees    │
+        └──────────────────────────────────────────┘
+                            │
+                            ▼
+        ┌──────────────────────────────────────────┐
+        │     @Transactional automatically         │
+        │     ROLLS BACK changes after test        │
+        └──────────────────────────────────────────┘
+                            │
+                            ▼
+        ┌──────────────────────────────────────────┐
+        │ Next Test starts with CLEAN dataset      │
+        │ (again only Alice, Bob, Charlie present) │
+        └──────────────────────────────────────────┘
+
+*/
