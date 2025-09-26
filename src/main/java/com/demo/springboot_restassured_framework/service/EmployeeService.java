@@ -18,17 +18,27 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
+    // Get employee by ID (throws exception if not found)
     public Employee getEmployeeById(Long id){
-        return employeeRepository.findById(id).orElse(null);
+//        return employeeRepository.findById(id).orElse(null);
+        return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
     }
 
+    // Create employee (validate name)
     public Employee createEmployee(Employee body){
+
+        /* This we have commented because we have already cover it in Entity with @NotBlank
+        if(body.getEmpName()==null || body.getEmpName().isBlank() || body.getEmpName().isEmpty()){
+            throw new IllegalArgumentException("Name cannot be Null or Blank");
+        }*/
         return employeeRepository.save(body);
     }
 
+    /*
     public Employee updateEmployee(Long id, Employee body){
 
         Employee employee = employeeRepository.findById(id).orElse(null);
+
         if (employee!=null){
             employee.setEmpName(body.getEmpName());
             employee.setEmpDesignation(body.getEmpDesignation());
@@ -36,6 +46,18 @@ public class EmployeeService {
             return employeeRepository.save(employee);
         }
         return null;
+    }
+    */
+    // Update employee (throws exception if not found)
+    public Employee updateEmployee(Long id, Employee body){
+
+//        Employee employee = employeeRepository.findById(id).orElse(null);
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
+
+        employee.setEmpName(body.getEmpName());
+        employee.setEmpDesignation(body.getEmpDesignation());
+        employee.setEmpSalary(body.getEmpSalary());
+        return employeeRepository.save(employee);
     }
 
     /*public void deleteEmployeeById(Long id){
@@ -47,7 +69,7 @@ public class EmployeeService {
             employeeRepository.deleteById(id);
             return true;
         }else {
-            return false;
+             throw new EmployeeNotFoundException(id);
         }
     }
 
