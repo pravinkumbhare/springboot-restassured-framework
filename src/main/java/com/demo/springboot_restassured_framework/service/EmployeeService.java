@@ -72,6 +72,12 @@ public class EmployeeService {
              throw new EmployeeNotFoundException(id);
         }
     }
+   /* public void deleteEmployeeById(Long id) {
+        if (!employeeRepository.existsById(id)) {
+            throw new EmployeeNotFoundException(id);
+        }
+        employeeRepository.deleteById(id);
+    }*/
 
     public Employee save(Employee employee){
         return employeeRepository.save(employee);

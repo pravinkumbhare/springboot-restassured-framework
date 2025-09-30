@@ -46,32 +46,32 @@ public class EmployeeController {
     }*/
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee body){
-   /*     Employee employee = employeeService.getEmployeeById(id);
+        Employee employee = employeeService.getEmployeeById(id);
         Employee updated = employeeService.updateEmployee(id, body);
-        if(employee!=null){
+        if(updated!=null){
             return ResponseEntity.ok(updated);
 
         }else {
             return ResponseEntity.notFound().build();
 //            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }*/
-        // Above code is commented because it handle via custom exception and never give null value
-        Employee updated = employeeService.updateEmployee(id, body);
-        return ResponseEntity.ok(updated);
+        }
+//        // Above code is commented because it handle via custom exception and never give null value
+//        Employee updated = employeeService.updateEmployee(id, body);
+//        return ResponseEntity.ok(updated);
 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployeeById(@PathVariable Long id){
-        /*boolean flag = employeeService.deleteEmployeeById(id);
+        boolean flag = employeeService.deleteEmployeeById(id);
         if (flag){
             return ResponseEntity.noContent().build();
         }else {
             return ResponseEntity.notFound().build();
-        }*/
+        }
 
-        employeeService.deleteEmployeeById(id);
-        return ResponseEntity.noContent().build();
+//        employeeService.deleteEmployeeById(id);
+//        return ResponseEntity.noContent().build();
     }
 
 }
