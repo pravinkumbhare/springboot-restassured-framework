@@ -38,7 +38,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("Test Get All Products")
     void testGetAllProducts(){
 
         // Mock Repository Layer
