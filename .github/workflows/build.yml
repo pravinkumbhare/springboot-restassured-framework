@@ -43,8 +43,7 @@ jobs:
       - name: Build and analyze with SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=pravinkumbhare_spring-boot-project-for-api-testing-messages-testing-microservices \
-            -Dsonar.organization=pravinkumbhare \
-            -Dsonar.host.url=https://sonarcloud.io
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=pravinkumbhare_spring-boot-project-for-api-testing-messages-testing-microservices \
+          -Dsonar.organization=pravinkumbhare \
+          -Dsonar.host.url=https://sonarcloud.io
