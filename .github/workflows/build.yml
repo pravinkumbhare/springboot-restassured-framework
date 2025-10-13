@@ -1,9 +1,9 @@
-name: SonarCloud Analysis
+name: CI with Maven + SonarCloud Analysis
 
 on:
   push:
     branches:
-      - main   # Change to 'master' if your main branch is named master
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -11,6 +11,11 @@ jobs:
   build:
     name: Build and analyze
     runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:24.0
+        options: --privileged
 
     steps:
       # Step 1: Checkout repository
