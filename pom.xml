@@ -123,6 +123,18 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- ✅ Flyway Migration for PostgreSQL -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<!-- (Optional, but recommended if you use multiple DBs) -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -1,14 +1,18 @@
 package com.demo.springboot_restassured_framework.integration;
 
+import org.flywaydb.core.Flyway;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -16,10 +20,17 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-@Testcontainers
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = {
+                com.demo.springboot_restassured_framework.SpringbootRestassuredFrameworkApplication.class,
+                com.demo.springboot_restassured_framework.config.TestConfig.class // ✅ added here
+        }
+)
 @ActiveProfiles("test")
+@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestPropertySource(locations = "classpath:application-test.yml")
 public class PetApiTestContainerIntegrationTest {
 
     // ✅ Step 1: Define and manage container lifecycle automatically
@@ -31,6 +42,21 @@ public class PetApiTestContainerIntegrationTest {
                     .withPassword("postgres")
                     .withReuse(true);  // ✅ allows reuse across test runs
 
+    static {
+        // ✅ Run Flyway manually before Spring context initializes
+        postgres.start(); // Start container early
+
+        Flyway flyway = Flyway.configure()
+                .dataSource(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword())
+                .locations("classpath:db/migration")
+                .load();
+
+//        flyway.clean();   // optional — ensures fresh DB each run
+        flyway.migrate(); // ✅ applies migrations
+
+        // Now Spring can use this DB
+    }
+
     // ✅ Step 2: Dynamically provide DB properties to Spring Boot
     @DynamicPropertySource
     static void registerPostgresProperties(DynamicPropertyRegistry registry) {
@@ -40,6 +66,17 @@ public class PetApiTestContainerIntegrationTest {
         registry.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
         registry.add("spring.jpa.properties.hibernate.dialect", () -> "org.hibernate.dialect.PostgreSQLDialect");
+
+        // ✅ Hibernate should NOT change schema
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "none");
+        registry.add("spring.jpa.properties.hibernate.dialect", () -> "org.hibernate.dialect.PostgreSQLDialect");
+
+        // ✅ Let Flyway manage schema
+        registry.add("spring.flyway.enabled", () -> "true");
+        registry.add("spring.flyway.locations", () -> "classpath:db/migration");
+
+        // ✅ Ensure Spring doesn’t try to run schema.sql
+        registry.add("spring.sql.init.mode", () -> "never");
     }
 
     @LocalServerPort

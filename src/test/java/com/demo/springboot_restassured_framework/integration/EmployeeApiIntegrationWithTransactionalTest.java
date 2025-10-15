@@ -22,11 +22,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 // To make sure each test gets a fresh dataset automatically without Hibernate interfering with IDs. That’s very handy for integration tests.
-// For clean and consistent test data in every integration test, we can combine H2 with Spring’s @Transactional test support or explicitly reload data.sql before each test. Here’s the most reliable approach
+// For clean and consistent test data in every integration test, we can combine H2 with Spring’s @Transactional test support or explicitly reload data_old.sql before each test. Here’s the most reliable approach
 
 // Key Improvements
 // @Transactional ensures rollback after each test → fresh DB every test.
-// Preloaded data.sql guarantees initial employees (Alice, Bob, Charlie).
+// Preloaded data_old.sql guarantees initial employees (Alice, Bob, Charlie).
 // Tests do not interfere with each other, even if inserts/updates/deletes happen.
 // Assertions use AssertJ for readability.
 // No need for manual cleanup of IDs (John Doe or others) anymore.
@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional  // Automatically rolls back DB changes after each test, So even if a test inserts, updates, or deletes, the DB resets automatically for the next test.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)       //  reuse same test class instance across all test methods.
-public class EmployeeApiIntegrationWithTransactionalTest {
+public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegrationTest {
 
     private static final Logger log = LogManager.getLogger(EmployeeApiIntegrationWithTransactionalTest.class);
 
@@ -47,8 +47,8 @@ public class EmployeeApiIntegrationWithTransactionalTest {
     @BeforeEach
     void reloadTestData() throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            ScriptUtils.executeSqlScript(conn, new ClassPathResource("schema.sql"));
-            ScriptUtils.executeSqlScript(conn, new ClassPathResource("data.sql"));
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("schema_old.sql"));
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("data_old.sql"));
         }
     }*/
 
@@ -191,7 +191,7 @@ public class EmployeeApiIntegrationWithTransactionalTest {
                             │
                             ▼
         ┌──────────────────────────────────────────┐
-        │   Load schema.sql + data.sql (Alice,     │
+        │   Load schema_old.sql + data_old.sql (Alice,     │
         │   Bob, Charlie into H2 in-memory DB)     │
         └──────────────────────────────────────────┘
                             │
