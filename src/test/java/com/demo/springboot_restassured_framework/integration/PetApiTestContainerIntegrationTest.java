@@ -1,5 +1,7 @@
 package com.demo.springboot_restassured_framework.integration;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import org.flywaydb.core.Flyway;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -20,6 +22,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
+@Epic("Pet Management with TestContainer")
+@Feature("Create Employee API using Test Container")
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {

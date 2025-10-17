@@ -1,5 +1,7 @@
 package com.demo.springboot_restassured_framework.integration;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -10,6 +12,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
+@Epic("Pet Management")
+@Feature("Create Pet API")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class) // Optional: ensure test order
 public class PetApiIntegrationTest {

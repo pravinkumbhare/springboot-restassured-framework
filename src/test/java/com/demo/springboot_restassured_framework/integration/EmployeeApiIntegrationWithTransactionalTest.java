@@ -2,6 +2,7 @@ package com.demo.springboot_restassured_framework.integration;
 
 import com.demo.springboot_restassured_framework.entity.Employee;
 import com.demo.springboot_restassured_framework.repository.EmployeeRepository;
+import io.qameta.allure.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
@@ -31,6 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 // Assertions use AssertJ for readability.
 // No need for manual cleanup of IDs (John Doe or others) anymore.
 
+@Epic("Employee Management")
+@Feature("Create Employee API")
 @SpringBootTest
 @Transactional  // Automatically rolls back DB changes after each test, So even if a test inserts, updates, or deletes, the DB resets automatically for the next test.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)       //  reuse same test class instance across all test methods.
@@ -53,6 +56,8 @@ public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegration
     }*/
 
     @Test
+    @Description("Verify that get all employee details successfully.")
+    @Severity(SeverityLevel.CRITICAL)
     public void testGetAllEmployees(){
 
         List<Employee> allEmployees = employeeRepository.findAll();
@@ -71,6 +76,8 @@ public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegration
     }
 
     @Test
+    @Description("Verify that a new employee can be created successfully.")
+    @Severity(SeverityLevel.CRITICAL)
     public void testCreateEmployee(){
 
         Employee employee = new Employee();
@@ -85,6 +92,8 @@ public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegration
     }
 
     @Test
+    @Description("Verify that a employee details can be updated successfully.")
+    @Severity(SeverityLevel.CRITICAL)
     void testUpdateEmployee(){
 
          Employee employee = employeeRepository.findAll().stream()
@@ -97,6 +106,8 @@ public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegration
     }
 
     @Test
+    @Description("Verify that an employee deleted successfully.")
+    @Severity(SeverityLevel.CRITICAL)
     void testDeleteEmployee(){
 
         Employee employee = employeeRepository.findAll().stream()
@@ -107,6 +118,8 @@ public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegration
     }
 
     @Test
+    @Description("Verify that get employee details by id successfully.")
+    @Severity(SeverityLevel.CRITICAL)
     void testGetEmployeeById(){
 
         Employee employee = employeeRepository.findAll().stream()
@@ -123,6 +136,8 @@ public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegration
 
     //  Try to fetch an employee that does not exist
     @Test
+    @Description("Verify that a GetNonExistingEmployeeById.")
+    @Severity(SeverityLevel.NORMAL)
     void testGetNonExistingEmployeeById(){
         Long invalidId = 11111L;
 
@@ -132,6 +147,8 @@ public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegration
 
     //  Try to update a non-existing employee
     @Test
+    @Description("Verify that a Update Non Existing Employee By Id.")
+    @Severity(SeverityLevel.CRITICAL)
     void testUpdateNonExistingEmployeeById(){
 
         Long inValidId = 2222L;
@@ -149,6 +166,8 @@ public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegration
 
 //  Try to delete a non-existing employee
     @Test
+    @Description("Verify try to Delete Invalid Employee.")
+    @Severity(SeverityLevel.NORMAL)
     void testDeleteInvalidEmployee(){
 
         Assertions.assertThrows(RuntimeException.class, () -> {
@@ -169,6 +188,8 @@ public class EmployeeApiIntegrationWithTransactionalTest extends BaseIntegration
 
     // Insert employee with null fields (invalid data)
     @Test
+    @Description("Verify that Create Employee With Null Name.")
+    @Severity(SeverityLevel.CRITICAL)
     void testCreateEmployeeWithNullName() {
 
         Assertions.assertThrows(RuntimeException.class, () -> {

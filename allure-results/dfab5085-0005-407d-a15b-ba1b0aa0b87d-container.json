@@ -1,0 +1,1 @@
+{"uuid":"dfab5085-0005-407d-a15b-ba1b0aa0b87d","name":"Should throw ConstraintViolationException for invalid names [Parameterized]","children":["ead524b3-b236-45ac-a508-46aed3b83539","5020b0ff-d689-474e-9f98-64f1b71c6f63","1d2d01a9-8ff1-4d73-af48-895fefb957e9"],"befores":[],"afters":[],"start":1760684399763,"stop":1760684399842}
