@@ -1,35 +1,23 @@
-// stages {
-//     stage('Build & Test') {
-//         steps {
-//             sh 'mvn clean verify -Dspring.profiles.active=test'
-//         }
-//     }
-//     stage('Code Quality') {
-//         steps {
-//             sh 'mvn sonar:sonar'
-//         }
-//     }
-// }
-
 pipeline {
     agent any
 
-//     tools {
-//         maven 'Maven-3.9.9'        // Replace with your Maven tool name in Jenkins
-//         jdk 'JDK17'                // Replace with your JDK name in Jenkins
-//     }
-
     stages {
         stage('Checkout') {
+            steps { checkout scm }
+        }
+
+        stage('Clean Workspace') {
             steps {
-                checkout scm
+                echo 'Cleaning previous results...'
+                bat 'rd /s /q allure-results || echo "No old results found"'
+                bat 'rd /s /q allure-report || echo "No old report found"'
             }
         }
 
         stage('Build & Test') {
             steps {
                 echo 'Building and running tests...'
-                bat 'mvn clean test'  // Use `sh` if running on Linux
+                bat 'mvn clean test'
             }
             post {
                 always {
